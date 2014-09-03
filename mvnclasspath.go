@@ -25,6 +25,24 @@ func escapePath(p string) string {
 }
 
 func main() {
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	dir := "pom.xml"
+
+	switch len(os.Args) {
+	case 1:
+		dir = cwd
+	case 2:
+		dir = os.Args[1]
+	default:
+		fmt.Fprintf(os.Stderr, "Usage of %s: [directory]\n", os.Args[0])
+		os.Exit(1)
+	}
+
 	home := os.Getenv("HOME")
 	if runtime.GOOS == "windows" {
 		home = os.Getenv("USERPROFILE")
@@ -34,16 +52,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
 	cacheDir := filepath.Join(home, ".mvncachepath")
 	cacheFile := filepath.Join(cacheDir, escapePath(cwd))
 
-	sfi, err := os.Stat("pom.xml")
+	sfi, err := os.Stat(filepath.Join(dir, "pom.xml"))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -67,6 +79,7 @@ func main() {
 	}
 
 	cmd := exec.Command("mvn", "dependency:build-classpath", "-DincludeScope=test")
+	cmd.Dir = dir
 	b, err := cmd.Output()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
