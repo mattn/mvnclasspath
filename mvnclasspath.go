@@ -82,7 +82,7 @@ func main() {
 	cmd.Dir = dir
 	b, err := cmd.Output()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, string(b))
 		os.Exit(1)
 	}
 
