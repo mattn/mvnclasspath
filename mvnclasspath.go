@@ -92,19 +92,20 @@ func main() {
 		if err != nil {
 			break
 		}
-		if strings.HasSuffix(string(b), " Dependencies classpath:") {
-			b, _, err = br.ReadLine()
-			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				os.Exit(1)
-			}
-			classpath := string(b)
-			fmt.Println(classpath)
-			err = ioutil.WriteFile(cacheFile, b, 0644)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-			}
-			break
+		if !strings.HasSuffix(string(b), " Dependencies classpath:") {
+			continue
 		}
+		b, _, err = br.ReadLine()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		classpath := string(b)
+		fmt.Println(classpath)
+		err = ioutil.WriteFile(cacheFile, b, 0644)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+		break
 	}
 }
