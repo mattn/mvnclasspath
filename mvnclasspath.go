@@ -31,7 +31,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	dir := "pom.xml"
+	var dir string
 
 	switch len(os.Args) {
 	case 1:
@@ -57,6 +57,10 @@ func main() {
 
 	sfi, err := os.Stat(filepath.Join(dir, "pom.xml"))
 	if err != nil {
+		if os.IsNotExist(err) {
+			fmt.Println(".")
+			return
+		}
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -82,7 +86,11 @@ func main() {
 	cmd.Dir = dir
 	b, err := cmd.Output()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, string(b))
+		if len(b) > 0 {
+			fmt.Fprintln(os.Stderr, string(b))
+		} else {
+			fmt.Fprintln(os.Stderr, err)
+		}
 		os.Exit(1)
 	}
 
