@@ -15,7 +15,7 @@ import (
 func escapePath(p string) string {
 	var buf bytes.Buffer
 	for _, r := range []rune(strings.ToLower(p)) {
-		if ('a' <= r && r <= 'z') || ('A' <= r && r <= 'Z') || ('0' <= r && r <= '9') {
+		if ('a' <= r && r <= 'z') || ('A' <= r && r <= 'Z') || ('0' <= r && r <= '9') || r == '_' || r == '-' || r == '.' {
 			buf.WriteRune(r)
 		} else {
 			buf.WriteString(fmt.Sprintf("%%%02x", r))
