@@ -41,8 +41,7 @@ func main() {
 	}
 
 	cacheDir := filepath.Join(home, ".mvncachepath")
-	cacheKey := escapePath(cwd)
-	cacheFile := filepath.Join(cacheDir, cacheKey)
+	cacheFile := filepath.Join(cacheDir, escapePath(cwd))
 
 	sfi, err := os.Stat("pom.xml")
 	if err != nil {
